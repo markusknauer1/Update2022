@@ -1,0 +1,46 @@
+﻿@model SalesWebMVC.Models.Seller
+
+@{
+    ViewData["Title"] = "Exclusão";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Tem Certeza que quer deletar esse Vendedor?</h3>
+
+<div>
+    <h4>Vendedor:</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Mail)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Mail)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BirthDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BirthDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BaseSalary)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BaseSalary)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Excluir" class="btn btn-danger" />
+        <a asp-action="Index">Voltar a lista</a>
+    </form>
+</div>

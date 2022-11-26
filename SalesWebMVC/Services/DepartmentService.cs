@@ -1,5 +1,4 @@
 ﻿using SalesWebMVC.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,10 +12,12 @@ namespace SalesWebMVC.Services
         {
             _context = context;
         }
-        //Retornar todos os departamentos
+
         public List<Department> FindAll()
         {
-            return _context.Department.OrderBy(x => x.Name).ToList();
+            return _context.Department
+                .OrderBy(x => x.Name)
+                .ToList();
         }
     }
 }
