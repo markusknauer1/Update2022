@@ -28,7 +28,7 @@ namespace SalesWebMVC.Controllers
 
         //POST
         [HttpPost]
-        //ataque de CSRF
+        //evita ataque de CSRF
         [ValidateAntiForgeryToken]
         public IActionResult Create(Seller seller) {
             _sellerService.Insert(seller);
