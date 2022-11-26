@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using SalesWebMVC.Models;
 using SalesWebMVC.Services;
 
 namespace SalesWebMVC.Controllers
@@ -12,12 +13,26 @@ namespace SalesWebMVC.Controllers
             _sellerService = sellerService;
         }
 
+        // Impressão da lista
         public IActionResult Index()
         {
             var list = _sellerService.FindAll();
             return View(list);
         }
 
+        //Solicitação de cadastro
+        public IActionResult Create()
+        {
+            return View();
+        }
 
+        //POST
+        [HttpPost]
+        //ataque de CSRF
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Seller seller) {
+            _sellerService.Insert(seller);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
