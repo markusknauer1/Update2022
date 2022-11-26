@@ -4,7 +4,6 @@ using SalesWebMVC.Services;
 using SalesWebMVC.Models;
 using SalesWebMVC.Models.ViewModels;
 using System.Collections.Generic;
-using SalesWebMVC.Services.Exceptions;
 using System.Diagnostics;
 
 namespace SalesWebMVC.Controllers
@@ -20,14 +19,14 @@ namespace SalesWebMVC.Controllers
             _departmentService = departmentService;
         }
 
-        // Impressão da lista
+        // IMPRESSÃO DA LISTA DE USUARIOS CADASTRADOS
         public IActionResult Index()
         {
             var list = _sellerService.FindAll();
             return View(list);
         }
 
-        //Solicitação de cadastro
+        //  SOLICITAÇÃO DE CADASTRO
         public IActionResult Create()
         {
             var departments = _departmentService.FindAll();
@@ -35,12 +34,18 @@ namespace SalesWebMVC.Controllers
             return View(viewModel);
         }
 
-        //POST
+        // METODO POST  =========================================== CADASTRAR NOVO USUARIO E VALIDAR CAMPOS
         [HttpPost]
         //evita ataque de CSRF
         [ValidateAntiForgeryToken]
         public IActionResult Create(Seller seller)
         {
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(viewModel);// METODO QUE EVITA QUE O NAVEGADOR GRAVE QLQR CADASTRO COM O JAVASCRIPT DESATIVADO
+            }
             _sellerService.Insert(seller);
             return RedirectToAction(nameof(Index));
         }
@@ -59,29 +64,7 @@ namespace SalesWebMVC.Controllers
 
             return View(obj);
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
-        {
-            _sellerService.Remove(id);
-            return RedirectToAction(nameof(Index));
-        }
-        public IActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return RedirectToAction(nameof(Error), new { message = "ID não detectado" });
-            }
-
-            var obj = _sellerService.FindById(id.Value);
-            if (obj == null)
-            {
-                return RedirectToAction(nameof(Error), new { message = "Não existe o ID!" });
-            }
-
-            return View(obj);
-        }
+        // METODO GET ================================== CONSULTAR EXISTENCIA DE USUÁRIO PELO ID E IXIBIR
         public IActionResult Edit(int? id)
         {
             if(id == null)
@@ -101,11 +84,21 @@ namespace SalesWebMVC.Controllers
             };
             return View(viewModel);
         }
+
+
+        //  METODO POST ================================= ATUALIZAR USUÁRIO E VALIDAR CAMPOS DE USUÁRIO EXISTENTE
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Seller seller)
         {
-            if(id != seller.Id)
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(viewModel);// METODO QUE EVITA QUE O NAVEGADOR GRAVE QLQR CADASTRO COM O JAVASCRIPT DESATIVADO
+            }
+
+            if (id != seller.Id)
             {
                 return RedirectToAction(nameof(Error), new { message = "ID Não corresponde!" });
             }
@@ -127,6 +120,33 @@ namespace SalesWebMVC.Controllers
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
             };
             return View(viewModel);
+        }
+
+
+
+
+        //METODO POST =========================================== DELETAR CADASTRO
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _sellerService.Remove(id);
+            return RedirectToAction(nameof(Index));
+        }
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Error), new { message = "ID não detectado" });
+            }
+
+            var obj = _sellerService.FindById(id.Value);
+            if (obj == null)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Não existe o ID!" });
+            }
+
+            return View(obj);
         }
     }
 }
