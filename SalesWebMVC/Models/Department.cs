@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Linq;
 
 namespace SalesWebMVC.Models
@@ -11,14 +10,17 @@ namespace SalesWebMVC.Models
         public string Name { get; set; }
         public ICollection<Seller> Sellers { get; set; } = new List<Seller>();
 
-        public Department() { }
+        public Department()
+        {
+        }
 
         public Department(int id, string name)
         {
             Id = id;
             Name = name;
         }
-        public void AddSaller(Seller seller)
+
+        public void AddSeller(Seller seller)
         {
             Sellers.Add(seller);
         }

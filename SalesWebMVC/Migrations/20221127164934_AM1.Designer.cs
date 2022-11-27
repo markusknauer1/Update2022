@@ -9,8 +9,8 @@ using SalesWebMVC.Models;
 namespace SalesWebMVC.Migrations
 {
     [DbContext(typeof(SalesWebMVCContext))]
-    [Migration("20221126170344_solo")]
-    partial class solo
+    [Migration("20221127164934_AM1")]
+    partial class AM1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -58,9 +58,9 @@ namespace SalesWebMVC.Migrations
 
                     b.Property<double>("BaseSalary");
 
-                    b.Property<DateTime>("BithDate");
+                    b.Property<DateTime>("BirthDate");
 
-                    b.Property<int?>("DepartmentId");
+                    b.Property<int>("DepartmentId");
 
                     b.Property<string>("Mail");
 
@@ -84,7 +84,8 @@ namespace SalesWebMVC.Migrations
                 {
                     b.HasOne("SalesWebMVC.Models.Department", "Department")
                         .WithMany("Sellers")
-                        .HasForeignKey("DepartmentId");
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
