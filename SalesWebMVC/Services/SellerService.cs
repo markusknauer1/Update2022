@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMVC.Services.Exceptions;
+using System.Threading.Tasks;
+using System;
 
 namespace SalesWebMVC.Services
 {
@@ -14,44 +16,46 @@ namespace SalesWebMVC.Services
         {
             _context = context;
         }
-        public List<Seller> FindAll()
+        public async Task<List<Seller>> FindAllAsync()
         {
-            return _context.Seller.ToList(); //operação sincrona
+            return await _context.Seller.ToListAsync(); //operação Async
+            //return _context.Seller.ToList(); operação sincrona
         }
         // inserir novo cadastro
-        public void Insert(Seller obj)
+        public async Task InsertAsync(Seller obj)
         {
             //obj.Department = _context.Department.First();
             _context.Add(obj);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         //FindById
-        public Seller FindById(int id)
+        public async Task<Seller> FindByIdAsync (int id)
         {
-            return _context.Seller
+            return await _context.Seller
                 .Include(obj => obj.Department) // eager loading
-                .FirstOrDefault(obj => obj.Id == id);
+                .FirstOrDefaultAsync(obj => obj.Id == id);
         }
 
-        //Deleção
-        public void Remove(int id)
+        //Remoção
+        public async Task RemoveAsync(int id)
         {
-            var obj = _context.Seller.Find(id);
+            var obj = await _context.Seller.FindAsync(id);
             _context.Seller.Remove(obj);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         //Update
-        public void Update(Seller obj)
+        public async Task UpdateAsync(Seller obj)
         {
-            if (!_context.Seller.Any(x => x.Id == obj.Id))
+            bool hasAny = await _context.Seller.AnyAsync(x => x.Id == obj.Id);
+            if (!hasAny)
             {
                 throw new NotFoundException("Objeto não existe!");
             }
             try
             {
                 _context.Update(obj);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (DbConcurrencyException e)
             {
