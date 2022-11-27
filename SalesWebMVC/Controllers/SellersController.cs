@@ -163,7 +163,7 @@ namespace SalesWebMVC.Controllers
             catch (IntegrityException e)
             {
                 //return RedirectToAction(nameof(Error), new { message = e.Message });
-                return RedirectToAction(nameof(Error), new { message = "Erro: não pode deletar o vendedor(a), por possuir vendas" });
+                return RedirectToAction(nameof(Error), new { message = "Erro ao tentar atualizar o banco." });
             }
         }
     }
